@@ -1,0 +1,5 @@
+volume
+.terraform
+*tfstate*
+*.log
+.auto.tfvars

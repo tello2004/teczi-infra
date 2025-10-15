@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+
+# crear un usuario especial para el backend (por seguridad)
+adduser --system teczi
+
+# instalar herramientas de sistema
+yum update -y
+yum install -y curl git
+
+# clonar el proyecto
+git clone https://github.com/tello2004/teczi /usr/local/src/teczi
+chown -R teczi /usr/local/src/teczi
+
+# instalar Node.js
+curl -fsSL https://rpm.nodesource.com/setup_22.x -o - | bash
+yum install -y nodejs
+
+# instalar dependencias
+cd /usr/local/src/teczi
+npm ci
+
+# crear servicio de fondo
+cat <<EOF >/etc/systemd/system/teczi.service
+[Unit]
+Description=Teczi
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/node server/index.js
+WorkingDirectory=/usr/local/src/teczi
+Restart=always
+RestartSec=5
+User=teczi
+Environment=NODE_ENV=production
+Environment=DB_HOST=${db_host}
+Environment=DB_PORT=${db_port}
+Environment=DB_NAME=${db_name}
+Environment=DB_USER=${db_user}
+Environment=DB_PASSWORD=${db_password}
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+systemctl daemon-reload && systemctl enable --now teczi.service

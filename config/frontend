@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+# instalar herramientas de sistema
+yum update -y
+yum install -y git
+
+# instalar servidor web
+yum install -y nginx
+
+# clonar el proyecto
+git clone https://github.com/tello2004/teczi /tmp/teczi
+mv /tmp/teczi/html /usr/share/nginx
+
+# configurar URL del backend
+sed -i 's/\*backend_url\*/http://${backend_host}:5000/g' /usr/share/nginx/html/app.mjs
