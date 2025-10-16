@@ -9,9 +9,9 @@ yum install -y nginx
 
 # clonar el proyecto
 git clone https://github.com/tello2004/teczi /tmp/teczi
-mv /tmp/teczi/html /usr/share/nginx
+cp -R /tmp/teczi/html/** /usr/share/nginx/html/
 
 # configurar URL del backend
-sed -i 's/"~"/"http:\/\/${backend_host}:5000"/g' /usr/share/nginx/html/app.mjs
+sed -i 's/"~"/"http:\/\/${backend_host}:5000"/g' /usr/share/nginx/html/app.js
 
 systemctl enable --now nginx

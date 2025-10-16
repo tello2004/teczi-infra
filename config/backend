@@ -5,7 +5,7 @@ adduser --system teczi
 
 # instalar herramientas de sistema
 yum update -y
-yum install -y curl git
+yum install -y git
 
 # clonar el proyecto
 git clone https://github.com/tello2004/teczi /usr/local/src/teczi
