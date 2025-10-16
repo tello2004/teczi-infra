@@ -63,7 +63,7 @@ resource "aws_subnet" "public" {
 resource "aws_subnet" "private" {
   count             = 2
   vpc_id            = aws_vpc.main.id
-  cidr_block        = "1.0.${count.index + 2}.0/24"
+  cidr_block        = "10.0.${count.index + 2}.0/24"
   availability_zone = var.availability_zones[count.index + 1]
 
   tags = {
@@ -165,14 +165,14 @@ resource "aws_security_group" "backend" {
     from_port       = 22
     to_port         = 22
     protocol        = "tcp"
-    security_groups = [aws_security_group.frontend]
+    security_groups = [aws_security_group.frontend.id]
   }
 
   ingress {
     from_port       = 5000
     to_port         = 5000
     protocol        = "tcp"
-    security_groups = [aws_security_group.frontend]
+    security_groups = [aws_security_group.frontend.id]
   }
 
   egress {
@@ -194,7 +194,7 @@ resource "aws_security_group" "rds" {
     from_port       = 5432
     to_port         = 5432
     protocol        = "tcp"
-    security_groups = [aws_security_group.backend]
+    security_groups = [aws_security_group.backend.id]
   }
 
   egress {
